@@ -1,5 +1,4 @@
 import os
-import sentry_sdk
 from flask import Flask, send_from_directory
 from flask_pymongo import PyMongo
 from flaskr import routes, db
@@ -9,17 +8,6 @@ from flask_jwt_extended import (
     get_jwt_identity, set_access_cookies,
     set_refresh_cookies, unset_jwt_cookies
 )
-from datetime import datetime, timedelta
-from sklearn.neural_network import MLPRegressor
-from threading import Thread
-import sklearn
-import joblib
-import numpy
-from sentry_sdk.integrations.flask import FlaskIntegration
-
-
-start_date = datetime(2020, 11, 1, 9, 00)
-
 
 def create_app(test_config=None):
     # create and configure the app    
@@ -30,10 +18,6 @@ def create_app(test_config=None):
     if environment == "production":
         app = Flask(__name__, static_folder='../../client/build',
                     instance_relative_config=True)
-        sentry_sdk.init(
-            integrations=[FlaskIntegration()],
-            traces_sample_rate=1.0
-        )
     else:
         app = Flask(__name__, instance_relative_config=True)
 
