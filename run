@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# Initial Deps
+if [[ $_ == $0 ]]; then
+    echo "Script must be sourced"
+    echo -e "\nUsage: source `basename $0` [bootstrap,dev,prod,help] [client,server]\n"
+    exit
+fi
+if [ $# -gt 2 ] || [ $# -lt 1 ]; then
+    echo -e "\nUsage: source `basename $0` [bootstrap,dev,prod,help] [client,server]\n"
+    return
+fi
+
+case $1 in
+    "bootstrap")
+        sudo apt update
+        sudo apt upgrade
+        sudo apt-get install python3 python3-pip
+        sudo apt-get install python3-flask
+        sudo snap install heroku --classic
+        sudo apt-get install curl
+        sudo apt-get install mongodb
+
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+        curl https://cli-assets.heroku.com/install.sh | sh
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+        nvm install node
+        
+        # Client side dependencies
+        cd client
+        npm install
+        cd ..
+        
+        # Server side dependencies
+        pip3 install -r requirements.txt
+        
+        # Export env variables
+        if [ -f .env ]
+        then
+            export $(cat .env | sed 's/#.*//g' | xargs)
+        fi
+    ;;
+    "dev")
+        export FLASK_APP=flaskr.py
+        export FLASK_ENV=development
+        export COOKIE_PROD=development
+        case $2 in
+            "client")
+                cd client
+                npm start
+                cd ..
+            ;;
+            "server")
+                sudo service mongodb start 
+                cd server
+                python3 -m flask run
+                cd ..
+                sudo service mongodb stop
+            ;;
+            *)
+                echo -e "\nUsage: source `basename $0` [bootstrap,dev,prod,help] [client,server]\n"
+            ;;
+        esac
+    ;;
+    "prod")
+        export FLASK_ENV=production
+        export COOKIE_PROD=development
+        sudo service mongodb start 
+        cd client 
+        npm run-script build
+        cd ..
+        gunicorn -w 4 --chdir server wsgi:app
+        sudo service mongodb stop
+    ;;
+    "build")
+        cd client
+        npm install
+        npm run-script build
+        cd ..
+    ;;
+    "help")
+        echo -e "\nUsage: source `basename $0` [bootstrap,dev,prod,help] [client,server]\n"
+        echo -e "\tbootstrap: run this to install dependents for the project. Run once before anything else"
+        echo -e "\tdev: run everything locally in development mode "
+        echo -e "\t\tclient: runs client in dev mode"
+        echo -e "\t\tserver: runs server in dev mode"
+        echo -e "\tprod: run everything locally in production mode, build and server front end"
+        echo -e "\thelp: usage of `basename $0`"
+    ;;
+    *)
+        echo -e "\nUsage: source `basename $0` [bootstrap,dev,prod,help] [client,server]\n"
+    ;;
+esac

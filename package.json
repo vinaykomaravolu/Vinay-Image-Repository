@@ -1,0 +1,15 @@
+{
+    "name": "cyberity",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "cd client && npm install && npm run-script build"
+    },
+    "cacheDirectories": [
+        "node_modules",
+        "react/node_modules"
+    ],
+    "engines": {
+        "node": "15.x",
+        "npm": "7.x"
+    }
+}

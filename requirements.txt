@@ -1,0 +1,6 @@
+flask
+gunicorn
+Flask-PyMongo
+flask-login
+Werkzeug
+flask-jwt-extended
