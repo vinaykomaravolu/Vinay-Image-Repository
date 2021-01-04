@@ -94,7 +94,7 @@ export default function PublicImages() {
 
             <GridList cellHeight={180} className={classes.gridList}>
                 {allImageList.map((imageData) => (
-                    <ImageListing key={imageData.filename + imageData._id["$oid"]} id={imageData._id["$oid"]} filename={imageData.filename} />
+                    <ImageListing key={imageData.filename + imageData._id["$oid"]} iid={imageData._id["$oid"]} filename={imageData.filename} />
                 ))}
             </GridList>
         </div>

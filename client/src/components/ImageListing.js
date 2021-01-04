@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ImageListing(props) {
     const classes = useStyles();
-    const { id, filename } = props;
+    const { iid, filename } = props;
     const [previewImage, setPreviewImage] = React.useState(null);
     const [shadow, setShadow] = React.useState(0);
     const [open, setOpen] = React.useState(false);
@@ -58,8 +58,8 @@ export default function ImageListing(props) {
 
 
     React.useEffect(() => {
-        if (id) {
-            fetch("/api/getImage/" + id, {
+        if (iid) {
+            fetch("/api/getImage/" + iid, {
                 method: "GET",
             })
                 .then(response => {
@@ -71,10 +71,10 @@ export default function ImageListing(props) {
                 });
         }
 
-    }, [])
+    }, [iid])
 
     function handleDownloadImage() {
-        fetch("/api/getImage/" + id, {
+        fetch("/api/getImage/" + iid, {
             method: "GET",
         })
             .then(response => {
