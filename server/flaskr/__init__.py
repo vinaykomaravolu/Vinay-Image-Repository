@@ -8,6 +8,7 @@ from flask_jwt_extended import (
     get_jwt_identity, set_access_cookies,
     set_refresh_cookies, unset_jwt_cookies
 )
+from datetime import datetime, timedelta
 
 def create_app(test_config=None):
     # create and configure the app    

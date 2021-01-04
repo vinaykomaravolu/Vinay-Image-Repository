@@ -63,6 +63,7 @@ Follow these instructions if you want to deploy this on heroku.
 5. Go to your app settings in heroku dashboard, and under settings, set these 2 config vars:
   * FLASK_ENV=production
   * MONGO_URI=<Mongodb uri. NOT mongodb+srv uri>
+  * COOKIE_PROD=production
 6. Follow [these instructions](https://devcenter.heroku.com/articles/github-integration#enabling-github-integration) to integrate with your forked repo:
 
 ## Application Demo
