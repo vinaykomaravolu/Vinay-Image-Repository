@@ -3,7 +3,7 @@
 
 ## Webapp
 
-The web application can be found: [Cyberity Application](https://cyberity.herokuapp.com/)
+The web application can be found:
 
 
 Table of Contents
