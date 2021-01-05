@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
         color: 'rgba(255, 255, 255, 0.54)',
     },
     tile: {
-        width: "275px",
-        height: "275px",
+        width: "250px",
+        height: "250px",
         padding: "6px"
     },
     dialog: {
@@ -73,7 +73,8 @@ export default function ImageListing(props) {
 
     }, [iid])
 
-    function handleDownloadImage() {
+    function handleDownloadImage(event) {
+        event.stopPropagation();
         fetch("/api/getImage/" + iid, {
             method: "GET",
         })
@@ -94,8 +95,8 @@ export default function ImageListing(props) {
                     <GridListTileBar
                         title={filename ? filename.split('.').slice(0, -1).join('.') : ""}
                         actionIcon={
-                            <IconButton aria-label={`info about ${filename}`} className={classes.icon}>
-                                <GetAppIcon onClick={() => handleDownloadImage()} />
+                            <IconButton onClick={(event) => handleDownloadImage(event)}  aria-label={`info about ${filename}`} className={classes.icon}>
+                                <GetAppIcon />
                             </IconButton>
                         }
                     />
@@ -113,8 +114,8 @@ export default function ImageListing(props) {
                     <img className={classes.image} src={previewImage} alt={filename} />
                 </DialogContent>
                 <DialogActions>
-                    <IconButton aria-label={`info about ${filename}`} className={classes.icon}>
-                        <GetAppIcon onClick={() => handleDownloadImage()} />
+                    <IconButton onClick={(event) => handleDownloadImage(event)} aria-label={`info about ${filename}`} className={classes.icon}>
+                        <GetAppIcon />
                     </IconButton>
                     <Button onClick={handleClose}>
                         Close

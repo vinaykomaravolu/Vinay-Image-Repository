@@ -21,7 +21,7 @@ import {
 import PrivateRoute from '../components/PrivateRoute'
 import YourImages from './YourImages';
 import PublicImages from './PublicImages';
-
+import Background from '../components/Background'
 
 const drawerWidth = 240;
 
@@ -109,6 +109,7 @@ export default function Navbar() {
 
     return (
         <div className={classes.root}>
+            <Background/>
             <CssBaseline />
             <Drawer
                 variant="permanent"

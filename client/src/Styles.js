@@ -4,14 +4,6 @@ const AuthPageStyles = makeStyles((theme) => ({
     root: {
         height: '100vh',
     },
-    image: {
-        backgroundRepeat: 'no-repeat',
-        backgroundColor:
-            theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-        backgroundSize: 'cover',
-        width: "70%",
-        backgroundPosition: 'center',
-    },
     paper: {
         margin: theme.spacing(8, 4),
         display: 'flex',

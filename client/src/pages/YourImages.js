@@ -18,7 +18,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ImageIcon from '@material-ui/icons/Image';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Collapse from '@material-ui/core/Collapse';
 import Box from '@material-ui/core/Box';
@@ -29,6 +29,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from '@material-ui/icons/Search';
+import Button from '@material-ui/core/Button';
 import { saveAs } from 'file-saver';
 
 function descendingComparator(a, b, orderBy) {
@@ -81,12 +82,12 @@ const headCells = [
         numeric: true,
         disablePadding: false,
         label: 'Privacy',
-    }, 
+    },
     {
         id: 'Delete',
         numeric: true,
         disablePadding: false,
-    }, 
+    },
     {
         id: 'Download',
         numeric: true,
@@ -118,6 +119,14 @@ const useStyles = makeStyles((theme) => ({
     upload: {
         display: "flex",
         justifyContent: "flex-end"
+    },
+    textfieldContainer: {
+        margin: "17px",
+        width: "30%",
+    },
+    textfield: {
+        width: "100%",
+        height: "100%"
     }
 }));
 
@@ -185,11 +194,16 @@ const useToolbarStyles = makeStyles((theme) => ({
     title: {
         flex: '1 1 100%',
     },
+    button: {
+        borderRadius: "30px",
+        width: "10%",
+        margin: "5px"
+    }
 }));
 
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
-    const { numSelected, selected, handleDownloadImages, handleDeleteImages } = props;
+    const { numSelected, selected, handlePrivacyChanges, handleDownloadImages, handleDeleteImages } = props;
 
     return (
         <Toolbar
@@ -216,18 +230,41 @@ const EnhancedTableToolbar = (props) => {
                         Image Repository
                     </Typography>
                 )}
-
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
-                    <IconButton>
-                        <DeleteIcon onClick={(event) => handleDeleteImages(event, selected)} />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="medium"
+                        className={classes.button}
+                        onClick={(event) => handlePrivacyChanges(event, selected, "public")}>
+                        Make Public
+                    </Button>
+                </Tooltip>
+            ) : null}
+            {numSelected > 0 ? (
+                <Tooltip title="Delete">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="medium"
+                        className={classes.button}
+                        onClick={(event) => handlePrivacyChanges(event, selected, "private")}>
+                        Make Private
+                    </Button>
+                </Tooltip>
+            ) : null}
+            {numSelected > 0 ? (
+                <Tooltip title="Delete">
+                    <IconButton onClick={(event) => handleDeleteImages(event, selected)} >
+                        <DeleteIcon />
                     </IconButton>
                 </Tooltip>
             ) : null}
             {numSelected > 0 ? (
                 <Tooltip title="Download">
-                    <IconButton>
-                        <GetAppIcon onClick={(event) => handleDownloadImages(event, selected)} />
+                    <IconButton onClick={(event) => handleDownloadImages(event, selected)}>
+                        <GetAppIcon />
                     </IconButton>
                 </Tooltip>
             ) : null}
@@ -236,11 +273,22 @@ const EnhancedTableToolbar = (props) => {
 };
 
 function Row(props) {
-    const { row, labelId, isItemSelected, handleClick, handleDownloadImage, handleDeleteImage } = props;
+    const {
+        row,
+        labelId,
+        isItemSelected,
+        handleClick,
+        handleDownloadImage,
+        handleDeleteImage
+    } = props;
     const [previewImage, setPreviewImage] = React.useState(null);
-    const [privacy, setPrivacy] = React.useState(row.privacy === "private" ? true : false);
+    const [privacy, setPrivacy] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const classes = useStyles();
+
+    React.useEffect(() => {
+        setPrivacy(row.privacy === "private" ? true : false);
+    }, [row])
 
     const handleOpen = (event) => {
         event.stopPropagation();
@@ -261,21 +309,17 @@ function Row(props) {
         }
     }
 
-
-    const handlePrivacyChange = (event) => {
+    const handleSwitchPrivacy = (event) => {
         event.stopPropagation();
         let privacyBool = event.target.checked;
-        let privacy = "public";
-        if (privacyBool) {
-            privacy = 'private';
-        }
-        fetch("/api/changeImagePrivacy/" + row.id, {
+        const imageIDs = [row.id];
+        fetch("/api/changeImagePrivacy", {
             method: "PATCH",
             headers: new Headers({
                 "X-CSRF-TOKEN": Cookies.get("csrf_access_token"),
                 "content-type": "application/json"
             }),
-            body: JSON.stringify({ "privacy": privacy })
+            body: JSON.stringify({ "privacy": (privacyBool ? "private" : "public"), "imagesToChangePrivacy": imageIDs })
         })
             .then(response => {
                 if (response.status === 200) {
@@ -308,29 +352,31 @@ function Row(props) {
                 <TableCell id={labelId} component="th" scope="row">
                     {row.filename ? row.filename.split('.').slice(0, -1).join('.') : ""}
                 </TableCell>
-                <TableCell>{row.filename ? row.filename.split('.').pop() : ""}</TableCell>
+                <TableCell>
+                    {row.filename ? row.filename.split('.').pop() : ""}
+                </TableCell>
                 <TableCell>{row.uploadDate ? (new Date(row.uploadDate)).toLocaleString() : ""}</TableCell>
                 <TableCell padding="checkbox">
                     <FormGroup row>
                         <FormControlLabel
-                            control={<Switch checked={privacy} onClick={(event) => handlePrivacyChange(event)} name="privacy" />}
-                            label="Private"
+                            control={<Switch checked={privacy} onClick={(event) => {handleSwitchPrivacy(event)}} name="privacy" />}
+                            label={privacy ? "Private" : "Public"}
                         />
                     </FormGroup>
                 </TableCell>
                 <TableCell padding="checkbox">
-                    <IconButton>
-                        <DeleteIcon onClick={(event) => handleDeleteImage(event, [row])} />
+                    <IconButton onClick={(event) => handleDeleteImage(event, [row])} >
+                        <DeleteIcon />
                     </IconButton>
                 </TableCell>
                 <TableCell padding="checkbox">
-                    <IconButton>
-                        <GetAppIcon onClick={(event) => handleDownloadImage(event, [row])} />
+                    <IconButton onClick={(event) => handleDownloadImage(event, [row])} >
+                        <GetAppIcon />
                     </IconButton>
                 </TableCell>
                 <TableCell padding="checkbox">
                     <IconButton aria-label="expand row" size="small" onClick={(event) => handleOpen(event)}>
-                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        {open ? <KeyboardArrowUpIcon /> : <ImageIcon />}
                     </IconButton>
                 </TableCell>
             </TableRow>
@@ -408,6 +454,28 @@ export default function YourImages() {
                     console.log(error);
                 });
         })
+    }
+
+    const handlePrivacyChanges = (event, images, privacy) => {
+        event.stopPropagation();
+        const imageIDs = images.map((image) => {
+            return image.id;
+        });
+        fetch("/api/changeImagePrivacy", {
+            method: "PATCH",
+            headers: new Headers({
+                "X-CSRF-TOKEN": Cookies.get("csrf_access_token"),
+                "content-type": "application/json"
+            }),
+            body: JSON.stringify({ "privacy": privacy, "imagesToChangePrivacy": imageIDs })
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    updateUserImages('/api/getUserImageData');
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
     }
 
     function handleUpload(event) {
@@ -516,30 +584,30 @@ export default function YourImages() {
                 <Box display="flex" p={1}>
                     <Box p={1} width="100%">
                         <form onSubmit={handleSearchTermChange}>
-                            <TextField
-                                className={classes.textfield}
-                                name="searchBar"
-                                variant="outlined"
-                                label="Search Images"
-                                size="small"
-                                autoFocus
-                                onInput={(event) => setSearchTerm(event.target.value.trim())}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment>
-                                            <IconButton type="Submit" disableFocusRipple={true} disableRipple={true}>
-                                                <SearchIcon />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
+                            <Paper className={classes.textfieldContainer}>
+                                <TextField
+                                    className={classes.textfield}
+                                    name="searchBar"
+                                    variant="outlined"
+                                    label="Search Images"
+                                    size="medium"
+                                    autoFocus
+                                    onInput={(event) => setSearchTerm(event.target.value.trim())}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment>
+                                                <IconButton type="Submit" disableFocusRipple={true} disableRipple={true}>
+                                                    <SearchIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                />
+                            </Paper>
                         </form>
                     </Box>
                     <Box p={1} flexShrink={0}>
-                        <Paper>
-                            <UploadImages handleUpload={handleUpload} />
-                        </Paper>
+                        <UploadImages handleUpload={handleUpload} />
                     </Box>
                 </Box>
                 <FormControlLabel
@@ -548,7 +616,13 @@ export default function YourImages() {
                 />
             </div>
             <Paper className={classes.paper}>
-                <EnhancedTableToolbar selected={selected} handleDownloadImages={handleDownloadImages} handleDeleteImages={handleDeleteImages} numSelected={selected.length} />
+                <EnhancedTableToolbar 
+                    selected={selected} 
+                    handlePrivacyChanges={handlePrivacyChanges} 
+                    handleDownloadImages={handleDownloadImages} 
+                    handleDeleteImages={handleDeleteImages} 
+                    numSelected={selected.length} 
+                />
                 <TableContainer>
                     <Table
                         className={classes.table}
@@ -572,7 +646,15 @@ export default function YourImages() {
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
-                                        <Row key={row.id + row.uploadDate} row={row} labelId={labelId} isItemSelected={isItemSelected} handleClick={handleClick} handleDeleteImage={handleDeleteImages} handleDownloadImage={handleDownloadImages} />
+                                        <Row
+                                            key={row.id + row.uploadDate}
+                                            row={row}
+                                            labelId={labelId}
+                                            isItemSelected={isItemSelected}
+                                            handleClick={handleClick}
+                                            handleDeleteImage={handleDeleteImages}
+                                            handleDownloadImage={handleDownloadImages}
+                                        />
                                     );
                                 })}
                             {emptyRows > 0 && (

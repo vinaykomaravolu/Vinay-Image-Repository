@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, abort, request, Response, current_app
-from flask.helpers import total_seconds
 from flask.json import jsonify
 from jinja2 import TemplateNotFound
 from flaskr.db import mongo
@@ -18,7 +17,9 @@ from flask_jwt_extended import (
 from bson.objectid import ObjectId
 from gridfs import GridFS, NoFile
 
+
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'jfif', 'svg', 'pjp', 'pjpeg'}
+
 
 environment = os.environ['FLASK_ENV']
 if environment == "production":
@@ -124,7 +125,6 @@ def uploadImage():
 
 def retrieve_image(file_id, mongo):
     storage = GridFS(mongo.db, "fs")
-
     try:
         fileobj = storage.get(file_id=ObjectId(file_id))
     except NoFile:
@@ -187,22 +187,28 @@ def getImageData(searchterm=""):
 
 @bp.route("/api/getAllUserImageData", methods=["GET"])
 @bp.route('/api/getAllUserImageData/<string:searchterm>', methods=["GET"])
+@bp.route('/api/getAllUserImageData/<int:num>', methods=["GET"])
+@bp.route('/api/getAllUserImageData/<string:searchterm>/<int:num>', methods=["GET"])
 @jwt_required
-def getAllUserImageData(searchterm=""):
+def getAllUserImageData(searchterm="",num=0):
     if request.method == 'GET':
-        images = list(mongo.db.fs.files.find({'filename': {'$regex': searchterm, '$options': 'i'}, 'privacy': "public"}))
+        images = list(mongo.db.fs.files.find({'filename': {'$regex': searchterm, '$options': 'i'}, 'privacy': "public"}).limit(num))
         return Response(json_util.dumps(images), mimetype='application/json'), 200
     return "Failure", 400
 
-@bp.route("/api/changeImagePrivacy/<string:imageID>", methods=["PATCH"])
+@bp.route("/api/changeImagePrivacy", methods=["PATCH"])
 @jwt_required
-def changeImagePrivacy(imageID=""):
+def changeImagePrivacy():
     if request.method == 'PATCH':
         req = request.get_json()
+        imagesToChangePrivacy = req['imagesToChangePrivacy']
         privacy = req['privacy']
         if privacy != "public" and privacy != "private":
             return "Incorrect Privacy Setting", 400
         userID = get_jwt_identity()
-        mongo.db.fs.files.update({'_id': ObjectId(imageID), 'user': ObjectId(userID)}, {'$set' : {"privacy" : privacy}})
+        imagesToChangePrivacyIDs = []
+        for imageID in imagesToChangePrivacy:
+            imagesToChangePrivacyIDs.append(ObjectId(imageID))
+        mongo.db.fs.files.update({'_id': { '$in' : imagesToChangePrivacyIDs}, 'user': ObjectId(userID)}, {'$set' : {"privacy" : privacy}}, multi=True)
         return "Changed Privacy Of Image", 200
     return "Failure", 400

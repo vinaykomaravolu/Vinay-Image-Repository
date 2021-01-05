@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import { useHistory } from "react-router-dom";
 import {AuthPageStyles} from "../Styles.js";
+import Background from '../components/Background';
+
 
 export default function SignIn() {
     const classes = AuthPageStyles();
@@ -56,16 +58,13 @@ export default function SignIn() {
     },[history]);
 
     return (
-        <Grid container component="main" className={classes.root}>
-            <CssBaseline />
-            <Grid item xs={false} sm={4} md={7} className={classes.image} />
-            <Grid item xs={12} sm={8} md={5} className={classes.auth} elevation={6} square="true">
-                <Container component="main">
+        <Container maxWidth="sm" component="main">
+            <Background/>
                     <CssBaseline />
                     <div className={classes.paper}>
                         <Typography component="h1" variant="h4">
                             Sign In
-            </Typography>
+                    </Typography>
                         <form className={classes.form} onSubmit={login} noValidate>
                             <TextField
                                 variant="outlined"
@@ -128,7 +127,5 @@ export default function SignIn() {
                         </form>
                     </div>
                 </Container>
-            </Grid>
-        </Grid>
     );
 }
