@@ -64,7 +64,7 @@ export default function SignUp() {
             <Background/>
             <CssBaseline />
             <div className={classes.paper}>
-                <Typography component="h1" variant="h4">
+                <Typography className={classes.title} component="h1" variant="h3">
                     Sign up
                         </Typography>
                 <form className={classes.form} noValidate onSubmit={register}>

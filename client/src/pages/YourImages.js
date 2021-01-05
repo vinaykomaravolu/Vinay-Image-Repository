@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
     textfield: {
         width: "100%",
         height: "100%"
-    }
+    },
 }));
 
 function EnhancedTableHead(props) {
@@ -227,7 +227,7 @@ const EnhancedTableToolbar = (props) => {
                         id="tableTitle"
                         component="div"
                     >
-                        Image Repository
+                        Your Image Repository
                     </Typography>
                 )}
             {numSelected > 0 ? (

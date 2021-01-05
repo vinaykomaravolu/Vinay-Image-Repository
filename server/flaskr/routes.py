@@ -16,8 +16,6 @@ from flask_jwt_extended import (
 )
 from bson.objectid import ObjectId
 from gridfs import GridFS, NoFile
-
-
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'jfif', 'svg', 'pjp', 'pjpeg'}
 
 

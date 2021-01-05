@@ -62,9 +62,9 @@ export default function SignIn() {
             <Background/>
                     <CssBaseline />
                     <div className={classes.paper}>
-                        <Typography component="h1" variant="h4">
+                        <Typography className={classes.title} component="h1" variant="h2">
                             Vinay's Image Repository
-                    </Typography>
+                        </Typography>
                         <form className={classes.form} onSubmit={login} noValidate>
                             <TextField
                                 variant="outlined"

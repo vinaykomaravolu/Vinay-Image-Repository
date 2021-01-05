@@ -22,9 +22,9 @@ const AuthPageStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-    auth: {
-        backgroundColor:
-            theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+    title:{
+        fontWeight: "bold",
+        fontFamily: "Roboto"
     }
 }));
 
