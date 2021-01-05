@@ -9,7 +9,7 @@ The web application can be found: https://vimage-repo.herokuapp.com/
 * user: **public**
 * password: **publicaccount123!**
 
-**Becasue mongodb atlas (Free Tier) only accounts for 512 MB: Please dont upload a massive amount of images, Thank you!**
+**Mongodb atlas (Free Tier) only accounts for *512 MB*: Please dont upload a massive amount of images, Thank you!**
 
 Table of Contents
 ---
