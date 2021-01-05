@@ -11,6 +11,8 @@ The web application can be found: https://vimage-repo.herokuapp.com/
 
 **Mongodb atlas (Free Tier) only accounts for *512 MB*: Please dont upload a massive amount of images, Thank you!**
 
+**Demo/Usage video can be found [here](https://youtu.be/Bwwq5muAKVc)**
+
 Table of Contents
 ---
 - [Features](#features)
