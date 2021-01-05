@@ -64,9 +64,7 @@ Table of Contents
 ## Video
 
 ### Screenshots
-![Signin](./assets/signin.png) 
-![Public Repo](./assets/publicimages.png)
-![Your Image Rep](./assets/yourimagerepo.png)
+![Signin](./assets/signin.png) ![Public Repo](./assets/publicimages.png) ![Your Image Rep](./assets/yourimagerepo.png)
 
 ## Architecture
 
