@@ -61,7 +61,8 @@ Table of Contents
 
 ## Application Demo
 
-## Video
+## Video/Usage
+Demo/Usage video can be found [here](https://youtu.be/Bwwq5muAKVc)
 
 ### Screenshots
 ![Signin](./assets/signin.png) ![Public Repo](./assets/publicimages.png) ![Your Image Rep](./assets/yourimagerepo.png)
