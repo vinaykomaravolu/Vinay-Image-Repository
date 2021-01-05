@@ -3,11 +3,16 @@
 
 ## Webapp
 
-The web application can be found:
+The web application can be found: https://vimage-repo.herokuapp.com/
 
+**Public Test Account:**
+* user: **public**
+* password: **publicaccount123!**
 
 Table of Contents
 ---
+- [Features](#features)
+- [Application Demo](#application-demo)
 - [Architecture](#architecture)
 - [Getting Started](#getting-started)
   - [App Prerequisites](#app-prerequisites)
@@ -16,15 +21,71 @@ Table of Contents
   - [Run in Production Mode Locally](#run-in-production-mode-locally)
   - [Mongodb Atlas Integration](#mongodb-atlas-integration)
 - [Deployment](#deployment)
-- [Application Demo](#application-demo)
+
+## Features
+
+* Private Image Repository
+    * Upload images (Single or Multiple)
+    * Delete images (Single or Multiple)
+    * Download images (Single or Multiple)
+    * Sort images by name, type, upload date
+    * Set image privacy
+        * Public: can be found in the public images and be viewed/downloaded by any user
+        * Private: Only available to you
+    * Bulk image privacy change, download, delete
+    * Image preview
+    * Image search
+
+* Public Image Repository
+    * Search images
+    * Infinite scrolling images
+    * Preview Image and view full image
+    * Download image
+
+* Authentication and Authorization
+    * Secure user authentication and authorization using JWT
+    * private images secure in database
+    * private routing 
+
+* Various Image Support:
+    * png
+    * jpg
+    * jpeg
+    * gif
+    * jfif
+    * svg
+    * pjp
+    * pjpeg
+
+## Application Demo
+
+## Video
+
+### Screenshots
+![Signin](./assets/signin.png) 
+![Public Repo](./assets/publicimages.png)
+![Your Image Rep](./assets/yourimagerepo.png)
 
 ## Architecture
 
+### Frontend:
+* React
+* Material UI
+* Node
+
+### Backend:
+* Flask
+* MongoDB
+
+### Hosting Services
+* MongoDB Atlas
+* Heroku
 
 ## Getting Started
 
 ### App Prerequisites
 
+* Linux or Unix distribution
 
 ### Installation
 
@@ -65,11 +126,3 @@ Follow these instructions if you want to deploy this on heroku.
   * MONGO_URI=<Mongodb uri. NOT mongodb+srv uri>
   * COOKIE_PROD=production
 6. Follow [these instructions](https://devcenter.heroku.com/articles/github-integration#enabling-github-integration) to integrate with your forked repo:
-
-## Application Demo
-
-### Screenshots
-
-### Features/Pages
-
-
