@@ -63,7 +63,7 @@ export default function SignIn() {
                     <CssBaseline />
                     <div className={classes.paper}>
                         <Typography component="h1" variant="h4">
-                            Sign In
+                            Vinay's Image Repository
                     </Typography>
                         <form className={classes.form} onSubmit={login} noValidate>
                             <TextField
