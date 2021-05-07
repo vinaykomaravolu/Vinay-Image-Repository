@@ -6,7 +6,7 @@
 
 The web application can be found: https://vimage-repo.herokuapp.com/
 
-**Public Test Account:**
+**Public Test Account (Or make your own):**
 * user: **public**
 * password: **publicaccount123!**
 
